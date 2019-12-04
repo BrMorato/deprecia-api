@@ -1,6 +1,8 @@
 package br.com.deprecia.api.Modelo;
 
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Currency;
 
 public class Bem {
 	private int id;
@@ -9,8 +11,8 @@ public class Bem {
 	private String descricao;
 	private int turnos;
 	private boolean estado_aquisicao;
-	private float valor_aquisicao;
-	private float valor_residual;
+	private BigDecimal valor_aquisicao;
+	private BigDecimal valor_residual;
 	private Date dt_aquisicao;
 	private Date dt_venda;
 	private boolean status;
@@ -61,18 +63,7 @@ public class Bem {
 	public void setEstado_aquisicao(boolean estado_aquisicao) {
 		this.estado_aquisicao = estado_aquisicao;
 	}
-	public float getValor_aquisicao() {
-		return valor_aquisicao;
-	}
-	public void setValor_aquisicao(float valor_aquisicao) {
-		this.valor_aquisicao = valor_aquisicao;
-	}
-	public float getValor_residual() {
-		return valor_residual;
-	}
-	public void setValor_residual(float valor_residual) {
-		this.valor_residual = valor_residual;
-	}
+	
 	public boolean isStatus() {
 		return status;
 	}
@@ -90,6 +81,18 @@ public class Bem {
 	}
 	public void setClassificacao(Crfb classificacao) {
 		this.classificacao = classificacao;
+	}
+	public BigDecimal getValor_aquisicao() {
+		return valor_aquisicao;
+	}
+	public void setValor_aquisicao(BigDecimal valor_aquisicao) {
+		this.valor_aquisicao = valor_aquisicao;
+	}
+	public BigDecimal getValor_residual() {
+		return valor_residual;
+	}
+	public void setValor_residual(BigDecimal valor_residual) {
+		this.valor_residual = valor_residual;
 	}
 	
 	

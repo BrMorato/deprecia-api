@@ -12,20 +12,21 @@ import br.com.deprecia.api.Modelo.Bem;
 public class BemDao {
 	public static boolean inserir(Bem bem) {
 		try {
-			String sql = "insert into tab_bens (codigo,nome,descricao,classificacao,estado_aquisicao,valor_aquisicao,valor_residual,dt_aquisicao,dt_venda,status) values (?,?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into tab_bens (codigo,nome,descricao,turnos,estado_aquisicao,valor_aquisicao,valor_residual,dt_aquisicao,dt_venda,status,id_crfb) values (?,?,?,?,?,?,?,?,?,?,?)";
 			
 			Connection conn = ConnectionFactory.getConnection();
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			pstm.setString(1, bem.getCodigo());
 			pstm.setString(2, bem.getNome());
 			pstm.setString(3, bem.getDescricao());
-			pstm.setInt(4, bem.getClassificacao().getId());
+			pstm.setInt(4, bem.getTurnos());
 			pstm.setBoolean(5, bem.isEstado_aquisicao());
-			pstm.setFloat(6, bem.getValor_aquisicao());
-			pstm.setFloat(7, bem.getValor_residual());
+			pstm.setBigDecimal(6, bem.getValor_aquisicao());
+			pstm.setBigDecimal(7, bem.getValor_residual());
 			pstm.setDate(8, bem.getDt_aquisicao());
 			pstm.setDate(9, bem.getDt_venda());
 			pstm.setBoolean(10,bem.isStatus());
+			pstm.setInt(11, bem.getClassificacao().getId());
 			
 			pstm.executeUpdate();
 			return true;
@@ -36,21 +37,23 @@ public class BemDao {
 		}
 		public static boolean alterar(Bem bem) {
 			try {
-				String sql = "update  tab_bens set codigo = ? ,nome = ?, descricao = ?, classificacao = ?,esta_aquisicao = ?,valor_aquisicao = ?,valor_residual = ?, dt_aquisicao = ?, dt_venda = ?, status = ? where id= ?";
+				String sql = "update  tab_bens set codigo = ? ,nome = ?, descricao = ?, turnos = ?,estado_aquisicao = ?,valor_aquisicao = ?,valor_residual = ?, dt_aquisicao = ?, dt_venda = ?, status = ?,id_crfb = ? where id= ?";
 				
 				Connection conn = ConnectionFactory.getConnection();
 				PreparedStatement pstm = conn.prepareStatement(sql);
 				pstm.setString(1, bem.getCodigo());
 				pstm.setString(2, bem.getNome());
 				pstm.setString(3, bem.getDescricao());
-				pstm.setInt(4, bem.getClassificacao().getId());
+				pstm.setInt(4, bem.getTurnos());
 				pstm.setBoolean(5, bem.isEstado_aquisicao());
-				pstm.setFloat(6, bem.getValor_aquisicao());
-				pstm.setFloat(7, bem.getValor_residual());
+				pstm.setBigDecimal(6, bem.getValor_aquisicao());
+				pstm.setBigDecimal(7, bem.getValor_residual());
 				pstm.setDate(8, bem.getDt_aquisicao());
 				pstm.setDate(9, bem.getDt_venda());
 				pstm.setBoolean(10,bem.isStatus());
-				pstm.setInt(11, bem.getId());
+				pstm.setInt(11, bem.getClassificacao().getId());
+				pstm.setInt(12, bem.getId());
+				
 				pstm.executeUpdate();
 				return true;
 			}catch (Exception e) {
@@ -82,7 +85,7 @@ public class BemDao {
 					
 					ResultSet  rs = pstm.executeQuery();
 					
-				List<Bem> listaCalssificao = new ArrayList<Bem>();
+				List<Bem> listaBem = new ArrayList<Bem>();
 				 while (rs.next()) {
 					 Bem b = new Bem();
 					 b.setId(rs.getInt("id"));
@@ -91,16 +94,16 @@ public class BemDao {
 					 b.setDescricao(rs.getString("descricao"));
 					 b.setClassificacao(CrfbDao.retornaPorId(rs.getInt("id_crfb")));
 					 b.setEstado_aquisicao(rs.getBoolean("estado_aquisicao"));
-					 b.setValor_aquisicao(rs.getFloat("valor_aquisicao"));
-					 b.setValor_residual(rs.getFloat("valor_residual"));
+					 b.setValor_aquisicao(rs.getBigDecimal("valor_aquisicao"));
+					 b.setValor_residual(rs.getBigDecimal("valor_residual"));
 					 b.setDt_aquisicao(rs.getDate("dt_aquisicao"));
 					 b.setDt_venda(rs.getDate("dt_aquisicao"));
 					 b.setStatus(rs.getBoolean("status"));
 					 b.setTurnos(rs.getInt("turnos"));
-					 listaCalssificao.add(b);
+					 listaBem.add(b);
 					 
 				 }
-				 return listaCalssificao;
+				 return listaBem;
 				}catch (Exception e) {
 					System.out.print("Erro ao listar as classificações! " + e.getMessage());
 					return null;
@@ -149,8 +152,8 @@ public class BemDao {
 				 b.setDescricao(rs.getString("descricao"));
 				 b.setClassificacao(CrfbDao.retornaPorId(rs.getInt("id_crfb")));
 				 b.setEstado_aquisicao(rs.getBoolean("estado_aquisicao"));
-				 b.setValor_aquisicao(rs.getFloat("valor_aquisicao"));
-				 b.setValor_residual(rs.getFloat("valor_residual"));
+				 b.setValor_aquisicao(rs.getBigDecimal("valor_aquisicao"));
+				 b.setValor_residual(rs.getBigDecimal("valor_residual"));
 				 b.setDt_aquisicao(rs.getDate("dt_aquisicao"));
 				 b.setDt_venda(rs.getDate("dt_aquisicao"));
 				 b.setStatus(rs.getBoolean("status"));

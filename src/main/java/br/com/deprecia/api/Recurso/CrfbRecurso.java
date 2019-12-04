@@ -23,7 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.deprecia.api.Modelo.Crfb;
 import br.com.deprecia.api.Dao.CrfbDao;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/classificacao")
 public class CrfbRecurso {

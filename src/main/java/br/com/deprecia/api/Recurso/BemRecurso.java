@@ -23,6 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import br.com.deprecia.api.Dao.BemDao;
 import br.com.deprecia.api.Modelo.Bem;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/bens")
 public class BemRecurso {
@@ -31,7 +32,7 @@ public class BemRecurso {
 	@CrossOrigin
 	@GetMapping
 	public List<Bem> listagem(){
-		return BemDao.listagem();
+		return BemDao.listagem(); 
 		
 	}
 	
