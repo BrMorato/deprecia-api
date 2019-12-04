@@ -20,56 +20,66 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import br.com.deprecia.api.Modelo.Crfb;
 import br.com.deprecia.api.Dao.CrfbDao;
+import br.com.deprecia.api.Modelo.Crfb;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/classificacao")
 public class CrfbRecurso {
-	
+
+	private CrfbDao dao;
+
+	public CrfbRecurso(CrfbDao dao) {
+		super();
+		this.dao = dao;
+	}
+
 	@CrossOrigin
 	@GetMapping
-	public List<Crfb> listagem(){
-		return CrfbDao.listagem();
-		
+	public List<Crfb> listagem() {
+		return this.dao.listagem();
+
 	}
-	
+
 	@CrossOrigin
 	@GetMapping("/familia")
-	public List<Crfb> listagemFcrfb(){
-		return CrfbDao.listagemFcrfb();
-		
+	public List<Crfb> listagemFcrfb() {
+		return this.dao.listagemFcrfb();
+
 	}
-	
+
 	@CrossOrigin
 	@GetMapping("/{id}")
 	public Crfb retornaPorId(@PathVariable int id) {
-		return CrfbDao.retornaPorId(id);
+		return this.dao.retornaPorId(id);
 	}
+
 	@CrossOrigin
-	@PostMapping	
-	public ResponseEntity<Crfb> inserir(@RequestBody Crfb crfb,HttpServletResponse response){
-		CrfbDao.inserir(crfb);
-		crfb.setId(CrfbDao.retornaUltimoId());
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(crfb.getId()).toUri();
+	@PostMapping
+	public ResponseEntity<Crfb> inserir(@RequestBody Crfb crfb, HttpServletResponse response) {
+		this.dao.inserir(crfb);
+		crfb.setId(this.dao.retornaUltimoId());
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(crfb.getId())
+				.toUri();
 		return ResponseEntity.created(uri).body(crfb);
 	}
+
 	@CrossOrigin
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable int id ) {
-		CrfbDao.excluir(id);
-		
+	public void delete(@PathVariable int id) {
+		this.dao.excluir(id);
+
 	}
+
 	@CrossOrigin
 	@PutMapping("/{id}")
 	public ResponseEntity<Crfb> update(@PathVariable int id, @RequestBody Crfb crfb) {
-		Crfb crfbX = CrfbDao.retornaPorId(id);
+		Crfb crfbX = this.dao.retornaPorId(id);
 		BeanUtils.copyProperties(crfb, crfbX, "id");
-		CrfbDao.alterar(crfbX);
+		this.dao.alterar(crfbX);
 		return ResponseEntity.ok(crfbX);
 	}
-
 
 }

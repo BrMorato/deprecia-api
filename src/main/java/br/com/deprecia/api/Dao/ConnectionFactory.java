@@ -7,9 +7,12 @@ import java.sql.DriverManager;
 public class ConnectionFactory {
 	
 	private static final String DRIVER = "org.postgresql.Driver";
-	private static final String URL = "jdbc:postgresql://localhost:5432/db_deprecia";
-	private static final String USER = "postgres";
-	private static final String PASSWORD = "brasil8";
+	private static final String URL = "jdbc:postgresql://tuffi.db.elephantsql.com:5432/zlegamcr";
+	
+//	postgres://zlegamcr:1E4jSW3TWzdXnEQrmd4sr1QbLQjvRa-h@tuffi.db.elephantsql.com:5432/zlegamcr
+	
+	private static final String USER = "zlegamcr";
+	private static final String PASSWORD = "1E4jSW3TWzdXnEQrmd4sr1QbLQjvRa-h";
 	
 	public static Connection getConnection() {
 		try {
@@ -19,6 +22,11 @@ public class ConnectionFactory {
 			System.out.print("Erro ao conectar ao Bando de dados! "+e.getMessage() );
 			return null;
 		}
+	}
+	
+	public static void main(String[] args) {
+		
+		System.out.print(ConnectionFactory.getConnection());
 	}
 
 }

@@ -28,11 +28,17 @@ import br.com.deprecia.api.Modelo.Bem;
 @RequestMapping("/bens")
 public class BemRecurso {
 	
+	private BemDao dao;
+	
+	public BemRecurso(BemDao dao) {
+		super();
+		this.dao = dao;
+	}
 
 	@CrossOrigin
 	@GetMapping
 	public List<Bem> listagem(){
-		return BemDao.listagem(); 
+		return this.dao.listagem(); 
 		
 	}
 	
@@ -46,14 +52,14 @@ public class BemRecurso {
 	@CrossOrigin
 	@GetMapping("/{id}")
 	public Bem retornaPorId(@PathVariable int id) {
-		return BemDao.retornaPorId(id);
+		return this.dao.retornaPorId(id);
 	}
 	
 	@CrossOrigin
 	@PostMapping	
 	public ResponseEntity<Bem> inserir(@RequestBody Bem bem,HttpServletResponse response){
-		BemDao.inserir(bem);
-		bem.setId(BemDao.retornaUltimoId());
+		this.dao.inserir(bem);
+		bem.setId(this.dao.retornaUltimoId());
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(bem.getId()).toUri();
 		return ResponseEntity.created(uri).body(bem);
 	}
@@ -62,16 +68,16 @@ public class BemRecurso {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable int id ) {
-		BemDao.excluir(id);
+		this.dao.excluir(id);
 		
 	}
 	
 	@CrossOrigin
 	@PutMapping("/{id}")
 	public ResponseEntity<Bem> update(@PathVariable int id, @RequestBody Bem bem) {
-		Bem bemX = BemDao.retornaPorId(id);
+		Bem bemX = this.dao.retornaPorId(id);
 		BeanUtils.copyProperties(bem, bemX, "id");
-		BemDao.alterar(bemX);
+		this.dao.alterar(bemX);
 		return ResponseEntity.ok(bemX);
 	}
 
