@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ import java.time.MonthDay;
 import java.time.Period;
 
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
@@ -68,7 +70,33 @@ if(dateDiff>0) {
             monthsBetween  += (end.get(Calendar.YEAR)-start.get(Calendar.YEAR))*12;      
             return monthsBetween;
      }
+	
+	public void RegistraDepreciacao(int idBem,int ano,int mes,Double valor) throws SQLException {
+		try {
+			String sql = "insert into tab_depreciacao (id_bem,mes,ano,valor) values (?,?,?,?)";
+			Connection conn = this.datasource.getConnection();
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			
+			BigDecimal valorMes = new BigDecimal( valor);
+			
+			pstm.setInt(1, idBem);
+			pstm.setInt(2, mes);
+			pstm.setInt(3, ano);
+			pstm.setBigDecimal(4, valorMes);	
+			pstm.executeUpdate();
 
+
+			conn.close();
+		}catch (Exception e) {
+			System.out.print("Erro ao registar depreciação " + e.getMessage());
+		}finally {
+			
+		    
+
+		}
+		
+		
+	}
 	
 	@SuppressWarnings({ "null", "deprecation" })
 	public boolean CalculaDepreciacao(Bem  bemDepreciar) {
@@ -144,7 +172,10 @@ if(dateDiff>0) {
 	dataInicioDepreciacao = Calendar.getInstance();
 	dataFimDepreciacao = Calendar.getInstance();
 	
-	Period intervalPeriod1 = Period.between(dataAquisicao.toLocalDate(), dataVenda.toLocalDate());
+	//Period intervalPeriod1 = Period.between(dataAquisicao.toLocalDate(), dataVenda.toLocalDate());
+	
+	valorDepreciacaoMes = ((((valorAquisicao.doubleValue() - valorResidual.doubleValue()) * ((1.0 / vidaUtilReal) * (coeficienteDepreciacao)))/12));
+
 
 	 anoAtual = dataAquisicao.toLocalDate().getYear();
 	 
@@ -166,7 +197,8 @@ if(dateDiff>0) {
 	    mesAtual = mesInicio;
 	    meses =1;
 	    anoFinal= dataVenda.toLocalDate().getYear();
-	 
+	    
+	     
    while (( anoAtual<=anoFinal)) {
 	    // while ((mesAtual<=12) & ((anoAtual <= dataVenda.getYear()) & (mesAtual<=mesFinal))) {
 	    	 
@@ -176,7 +208,7 @@ if(dateDiff>0) {
 	    		 
 	    	 }
 	    	 
-	   //  }
+	    	 RegistraDepreciacao(bemDepreciar.getId(),anoAtual,mesAtual,(bemDepreciar.getValor_aquisicao().doubleValue() -(valorDepreciacaoMes * meses) ));
 	  	     meses ++;
 
 	    	 mesAtual++;
@@ -193,12 +225,10 @@ if(dateDiff>0) {
 	//monthsBetween = monthsBetweenDates(dataInicioDepreciacao, dataFimDepreciacao);
 	//ChronoUnit.MONTHS.between((Temporal)dataInicioDepreciacao, (Temporal) dataFimDepreciacao);
     
-	valorDepreciacaoMes = ((((valorAquisicao.doubleValue() - valorResidual.doubleValue()) * ((1.0 / vidaUtilReal) * (coeficienteDepreciacao)))/12));
 
 	valorDepreciado = valorAquisicao.subtract(valorResidual);
 
-	// while(valorDepreciado>valorResidual){
-	
+
 	System.out.println("Data:" + bemDepreciar.getDt_aquisicao()+"/"+bemDepreciar.getDt_venda());
 	
 	System.out.println("Data usada:" + dataAquisicao.getTime()+"/"+dataVenda.getTime());
@@ -229,13 +259,21 @@ if(dateDiff>0) {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			pstm.setInt(1, idBem);
 			ResultSet rs = pstm.executeQuery();
+			
+			//d.setBem(this.bemDao.retornaPorId(rs.getInt("id_bem")));
+			
+			Bem b = new Bem() ;
+			
+			b = this.bemDao.retornaPorId(idBem);
+			
+		     
 
 			List<Depreciacao> listaDepreciacao = new ArrayList<Depreciacao>();
 			while (rs.next()) {
 				Depreciacao d = new Depreciacao();
 				d.setId(rs.getInt("id"));
-				
-				d.setBem(this.bemDao.retornaPorId(rs.getInt("id_bem")));
+				d.setBem(b);
+
 			
 
 				d.setMes(rs.getInt("mes"));
@@ -245,7 +283,9 @@ if(dateDiff>0) {
 				listaDepreciacao.add(d);
 
 			}
-				return listaDepreciacao;
+			conn.close();
+	
+			return listaDepreciacao;
 			
 		} catch (Exception e) {
 			System.out.print("Erro ao listar a depreciação do bem! " + e.getMessage());

@@ -3,10 +3,12 @@ package br.com.deprecia.api.Dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
+import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
@@ -43,6 +45,8 @@ public class BemDao {
 			pstm.setInt(11, bem.getClassificacao().getId());
 
 			pstm.executeUpdate();
+			conn.close();
+
 			return true;
 		} catch (Exception e) {
 			System.out.print("Erro ao inserir novo Bem! " + e.getMessage());
@@ -70,6 +74,8 @@ public class BemDao {
 			pstm.setInt(12, bem.getId());
 
 			pstm.executeUpdate();
+			conn.close();
+
 			return true;
 		} catch (Exception e) {
 			System.out.print("Erro ao alterar o Bem! " + e.getMessage());
@@ -85,6 +91,8 @@ public class BemDao {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			pstm.setInt(1, id);
 			pstm.executeUpdate();
+			conn.close();
+
 			return true;
 		} catch (Exception e) {
 			System.out.print("Erro ao excluir Bem! " + e.getMessage());
@@ -119,6 +127,8 @@ public class BemDao {
 				listaBem.add(b);
 
 			}
+			conn.close();
+
 			return listaBem;
 		} catch (Exception e) {
 			System.out.print("Erro ao listar as classificações! " + e.getMessage());
@@ -146,6 +156,7 @@ public class BemDao {
 	 * 
 	 * }
 	 */
+	@Transactional
 	public Bem retornaPorId(int id) {
 		try {
 
@@ -168,11 +179,20 @@ public class BemDao {
 			b.setDt_aquisicao(rs.getDate("dt_aquisicao"));
 			b.setDt_venda(rs.getDate("dt_venda"));
 			b.setStatus(rs.getBoolean("status"));
+			conn.close();
+
 			return b;
 
 		} catch (Exception e) {
 			System.out.print("Erro ao listar dos dados do Bem! " + e.getMessage());
 			return null;
+		}finally {
+			try {
+				this.datasource.getConnection().close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -186,6 +206,8 @@ public class BemDao {
 
 			ResultSet rs = pstm.executeQuery();
 			rs.next();
+			conn.close();
+
 			return rs.getInt("ultimoid");
 		} catch (Exception e) {
 			return 0;
