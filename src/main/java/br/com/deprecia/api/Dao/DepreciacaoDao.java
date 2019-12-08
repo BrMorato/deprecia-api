@@ -6,15 +6,17 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.time.MonthDay;
-
+import java.time.Period;
 
 import javax.sql.DataSource;
 
@@ -76,14 +78,14 @@ if(dateDiff>0) {
 			double valorDepreciacaoMes, coeficienteDepreciacao,valorSemResidual,
 			vidaUtilReal, anosUso = 3;
 			BigDecimal valorDepreciado;
-	Date dataAquisicao;
+	Date dataAquisicao,D1 = null,D2= null;
 	Date dataVenda;
-	int meses, vidaUtil, estadoAquisicao, turnos;
+	int meses, vidaUtil, estadoAquisicao, turnos,mesInicio,mesAtual,mesFinal,anoAtual,anoFinal;
 	float taxa_anual;
 	String produto;
 	Calendar dataInicioDepreciacao = null, dataFimDepreciacao = null;
 
-	SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+	
 
 
 
@@ -142,44 +144,71 @@ if(dateDiff>0) {
 	dataInicioDepreciacao = Calendar.getInstance();
 	dataFimDepreciacao = Calendar.getInstance();
 	
-	
+	Period intervalPeriod1 = Period.between(dataAquisicao.toLocalDate(), dataVenda.toLocalDate());
 
-	
-	if (dataAquisicao.getDay() > 15) {
+	 anoAtual = dataAquisicao.toLocalDate().getYear();
+	 
+	 if (dataAquisicao.toLocalDate().getDayOfMonth()  > 14) {
+		 mesInicio = dataAquisicao.toLocalDate().getMonth().getValue()+1;			
+		} else {
+			 mesInicio = dataAquisicao.toLocalDate().getMonth().getValue();
+		}
 
-		dataInicioDepreciacao.setTime(dataAquisicao);
-		dataInicioDepreciacao.set(Calendar.MONTH, dataInicioDepreciacao.get(Calendar.MONTH) + 1);
-		
-	} else {
-		dataInicioDepreciacao.setTime(dataAquisicao);
-		
-	}
+		if (dataVenda.toLocalDate().getDayOfMonth() <= 14) {
+			 mesFinal = dataVenda.toLocalDate().getMonth().getValue()-1;
 
-	if (dataVenda.getDay() < 15) {
-		
-		dataFimDepreciacao.setTime(dataVenda);
-		dataFimDepreciacao.set(Calendar.MONTH, dataFimDepreciacao.get(Calendar.MONTH) - 1);
-		
-	} else {
 
-		dataFimDepreciacao.setTime(dataVenda);
-		
-	}
-	
-    
-	monthsBetween = monthsBetweenDates(dataInicioDepreciacao, dataFimDepreciacao);//ChronoUnit.MONTHS.between((Temporal)dataInicioDepreciacao, (Temporal) dataFimDepreciacao);
+		} else {
+			 mesFinal = dataVenda.toLocalDate().getMonth().getValue();
+			
+		}
+	   
+	    mesAtual = mesInicio;
+	    meses =1;
+	    anoFinal= dataVenda.toLocalDate().getYear();
+	 
+   while (( anoAtual<=anoFinal)) {
+	    // while ((mesAtual<=12) & ((anoAtual <= dataVenda.getYear()) & (mesAtual<=mesFinal))) {
+	    	 
+	    	 if(mesAtual==12) {
+	    		 anoAtual++;
+	    		 mesAtual=0;
+	    		 
+	    	 }
+	    	 
+	   //  }
+	  	     meses ++;
+
+	    	 mesAtual++;
+	    	 
+	    	 if((anoAtual==anoFinal) & (mesAtual==mesFinal)) {
+	    		 
+	    		 break;
+	    	 }
+	   
+   }
+   
+
+	//Period intervalPeriod = Period.between(D1.toLocalDate(), D2.toLocalDate());
+	//monthsBetween = monthsBetweenDates(dataInicioDepreciacao, dataFimDepreciacao);
+	//ChronoUnit.MONTHS.between((Temporal)dataInicioDepreciacao, (Temporal) dataFimDepreciacao);
     
 	valorDepreciacaoMes = ((((valorAquisicao.doubleValue() - valorResidual.doubleValue()) * ((1.0 / vidaUtilReal) * (coeficienteDepreciacao)))/12));
 
 	valorDepreciado = valorAquisicao.subtract(valorResidual);
 
 	// while(valorDepreciado>valorResidual){
+	
+	System.out.println("Data:" + bemDepreciar.getDt_aquisicao()+"/"+bemDepreciar.getDt_venda());
+	
+	System.out.println("Data usada:" + dataAquisicao.getTime()+"/"+dataVenda.getTime());
 
-	System.out.println("Meses:" + monthsBetween);
+
+	System.out.println("Meses:" + meses);
 
 	System.out.println("Valor mês:" + valorDepreciacaoMes);
 
-	System.out.println("Valor depreciado:" + (valorAquisicao.doubleValue() - (valorDepreciacaoMes * monthsBetween)));
+	System.out.println("Valor depreciado:" + (valorAquisicao.doubleValue() - (valorDepreciacaoMes * meses)));
 	
 	         
 		

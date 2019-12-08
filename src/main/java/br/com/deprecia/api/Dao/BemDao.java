@@ -113,7 +113,7 @@ public class BemDao {
 				b.setValor_aquisicao(rs.getBigDecimal("valor_aquisicao"));
 				b.setValor_residual(rs.getBigDecimal("valor_residual"));
 				b.setDt_aquisicao(rs.getDate("dt_aquisicao"));
-				b.setDt_venda(rs.getDate("dt_aquisicao"));
+				b.setDt_venda(rs.getDate("dt_venda"));
 				b.setStatus(rs.getBoolean("status"));
 				b.setTurnos(rs.getInt("turnos"));
 				listaBem.add(b);
@@ -166,7 +166,7 @@ public class BemDao {
 			b.setValor_aquisicao(rs.getBigDecimal("valor_aquisicao"));
 			b.setValor_residual(rs.getBigDecimal("valor_residual"));
 			b.setDt_aquisicao(rs.getDate("dt_aquisicao"));
-			b.setDt_venda(rs.getDate("dt_aquisicao"));
+			b.setDt_venda(rs.getDate("dt_venda"));
 			b.setStatus(rs.getBoolean("status"));
 			return b;
 
