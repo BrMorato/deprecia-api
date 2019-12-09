@@ -133,9 +133,14 @@ if(dateDiff>0) {
 	valorResidual = bemDepreciar.getValor_residual();
 
 	turnos = bemDepreciar.getTurnos();
-
+    
+	if(bemDepreciar.getDt_venda() != null) {
 	dataVenda =  bemDepreciar.getDt_venda();
+	}else {
+		
+		dataVenda = new Date(Calendar.getInstance().getTime().getTime());
 
+	}
 
 	long monthsBetween = 0;
 
@@ -178,16 +183,26 @@ if(dateDiff>0) {
 
 
 	 anoAtual = dataAquisicao.toLocalDate().getYear();
+	 anoFinal= dataVenda.toLocalDate().getYear();
 	 
 	 if (dataAquisicao.toLocalDate().getDayOfMonth()  > 14) {
-		 mesInicio = dataAquisicao.toLocalDate().getMonth().getValue()+1;			
+		 if  (dataAquisicao.toLocalDate().getMonth().getValue()==12) {
+		 mesInicio = 1;	
+		 anoAtual ++;
+		 }else {
+			 mesInicio = dataAquisicao.toLocalDate().getMonth().getValue()+1;
+		 }
 		} else {
 			 mesInicio = dataAquisicao.toLocalDate().getMonth().getValue();
 		}
 
 		if (dataVenda.toLocalDate().getDayOfMonth() <= 14) {
-			 mesFinal = dataVenda.toLocalDate().getMonth().getValue()-1;
-
+			if(dataVenda.toLocalDate().getMonth().getValue()==1) {
+			 mesFinal = 12;
+			 anoFinal --;
+			}else {
+				mesFinal = dataVenda.toLocalDate().getMonth().getValue()-1;
+			}
 
 		} else {
 			 mesFinal = dataVenda.toLocalDate().getMonth().getValue();
@@ -196,7 +211,7 @@ if(dateDiff>0) {
 	   
 	    mesAtual = mesInicio;
 	    meses =1;
-	    anoFinal= dataVenda.toLocalDate().getYear();
+	   
 	    
 	     
    while (( anoAtual<=anoFinal)) {
@@ -290,5 +305,43 @@ if(dateDiff>0) {
 		}
 	}
 
+	public List<Depreciacao> listacheia() {
+		try {
+			
+			String sql = "select * from tab_depreciacao where id_bem = ? order by id asc";
+			Connection conn = this.datasource.getConnection();
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setInt(1, 0);
+			ResultSet rs = pstm.executeQuery();
+			
+			//d.setBem(this.bemDao.retornaPorId(rs.getInt("id_bem")));
+			
+			Bem b = new Bem() ;
+			
+			b = this.bemDao.retornaPorId(0);
+			
+		     
 
+			List<Depreciacao> listacheia = new ArrayList<Depreciacao>();
+			while (rs.next()) {
+				Depreciacao d = new Depreciacao();
+				d.setId(rs.getInt("id"));
+				d.setBem(b);
+				d.setMes(rs.getInt("mes"));
+				d.setAno(rs.getInt("ano"));
+				d.setValor(rs.getBigDecimal("valor"));
+				
+				listacheia.add(d);
+
+			}
+			conn.close();
+	
+			return listacheia;
+			
+		} catch (Exception e) {
+			System.out.print("Erro ao listar a depreciação do bem! " + e.getMessage());
+			return null;
+		}
+	}
+	
 }

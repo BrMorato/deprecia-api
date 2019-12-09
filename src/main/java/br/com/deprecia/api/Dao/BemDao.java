@@ -120,6 +120,7 @@ public class BemDao {
 				b.setEstado_aquisicao(rs.getBoolean("estado_aquisicao"));
 				b.setValor_aquisicao(rs.getBigDecimal("valor_aquisicao"));
 				b.setValor_residual(rs.getBigDecimal("valor_residual"));
+				b.setValor_venda(rs.getBigDecimal("valor_venda"));
 				b.setDt_aquisicao(rs.getDate("dt_aquisicao"));
 				b.setDt_venda(rs.getDate("dt_venda"));
 				b.setStatus(rs.getBoolean("status"));
@@ -174,8 +175,12 @@ public class BemDao {
 			b.setDescricao(rs.getString("descricao"));
 			b.setClassificacao(this.crbfDao.retornaPorId(rs.getInt("id_crfb")));
 			b.setEstado_aquisicao(rs.getBoolean("estado_aquisicao"));
+			b.setTurnos(rs.getInt("turnos"));
+
 			b.setValor_aquisicao(rs.getBigDecimal("valor_aquisicao"));
 			b.setValor_residual(rs.getBigDecimal("valor_residual"));
+			b.setValor_venda(rs.getBigDecimal("valor_venda"));
+
 			b.setDt_aquisicao(rs.getDate("dt_aquisicao"));
 			b.setDt_venda(rs.getDate("dt_venda"));
 			b.setStatus(rs.getBoolean("status"));

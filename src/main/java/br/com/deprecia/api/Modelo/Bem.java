@@ -6,6 +6,12 @@ import java.util.Currency;
 
 public class Bem {
 	private int id;
+	public BigDecimal getValor_venda() {
+		return valor_venda;
+	}
+	public void setValor_venda(BigDecimal valor_venda) {
+		this.valor_venda = valor_venda;
+	}
 	private String codigo;
 	private String nome;
 	private String descricao;
@@ -13,6 +19,8 @@ public class Bem {
 	private boolean estado_aquisicao;
 	private BigDecimal valor_aquisicao;
 	private BigDecimal valor_residual;
+	private BigDecimal valor_venda;
+
 	private Date dt_aquisicao;
 	private Date dt_venda;
 	private boolean status;
