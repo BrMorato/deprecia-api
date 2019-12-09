@@ -35,6 +35,8 @@ public class CrfbDao {
 			pstm.setFloat(4, crfb.getTaxa_depreciacao());
 
 			pstm.executeUpdate();
+			conn.close();
+
 			return true;
 		} catch (Exception e) {
 			System.out.print("Erro ao inserir classificação! " + e.getMessage());
@@ -54,6 +56,8 @@ public class CrfbDao {
 			pstm.setFloat(4, crfb.getTaxa_depreciacao());
 			pstm.setInt(5, crfb.getId());
 			pstm.executeUpdate();
+			conn.close();
+
 			return true;
 		} catch (Exception e) {
 			System.out.print("Erro ao alterar a classificação! " + e.getMessage());
@@ -77,6 +81,8 @@ public class CrfbDao {
 			PreparedStatement pstm = conn.prepareStatement(sql);
 			pstm.setInt(1, id);
 			pstm.executeUpdate();
+			conn.close();
+
 			return true;
 		} catch (Exception e) {
 			System.out.print("Erro ao excluir classificação! " + e.getMessage());
@@ -102,8 +108,11 @@ public class CrfbDao {
 				c.setVida_util(rs.getInt("vida_util"));
 				c.setTaxa_depreciacao(rs.getFloat("taxa_depreciacao"));
 				listaCalssificao.add(c);
+				
 
 			}
+			conn.close();
+
 			return listaCalssificao;
 		} catch (Exception e) {
 			System.out.print("Erro ao listar as classificações! " + e.getMessage());
@@ -130,6 +139,7 @@ public class CrfbDao {
 				listaFCalssificao.add(c);
 
 			}
+			conn.close();
 			return listaFCalssificao;
 		} catch (Exception e) {
 			System.out.print("Erro ao listar a Família de classificação! " + e.getMessage());
@@ -154,6 +164,8 @@ public class CrfbDao {
 			c.setDescricao(rs.getString("descricao"));
 			c.setVida_util(rs.getInt("vida_util"));
 			c.setTaxa_depreciacao(rs.getFloat("taxa_depreciacao"));
+			
+			conn.close();
 			return c;
 
 		} catch (Exception e) {
@@ -172,6 +184,8 @@ public class CrfbDao {
 
 			ResultSet rs = pstm.executeQuery();
 			rs.next();
+			
+			conn.close();
 			return rs.getInt("ultimoid");
 		} catch (Exception e) {
 			return 0;

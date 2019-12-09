@@ -273,9 +273,6 @@ if(dateDiff>0) {
 				Depreciacao d = new Depreciacao();
 				d.setId(rs.getInt("id"));
 				d.setBem(b);
-
-			
-
 				d.setMes(rs.getInt("mes"));
 				d.setAno(rs.getInt("ano"));
 				d.setValor(rs.getBigDecimal("valor"));
