@@ -216,7 +216,15 @@ if(dateDiff>0) {
 	     
    while (( anoAtual<=anoFinal)) {
 	    // while ((mesAtual<=12) & ((anoAtual <= dataVenda.getYear()) & (mesAtual<=mesFinal))) {
-  	 RegistraDepreciacao(bemDepreciar.getId(),anoAtual,mesAtual,(bemDepreciar.getValor_aquisicao().doubleValue() -(valorDepreciacaoMes * meses) ));
+	   if((bemDepreciar.getValor_aquisicao().doubleValue() -(valorDepreciacaoMes * meses) )<0) {
+		   RegistraDepreciacao(bemDepreciar.getId(),anoAtual,mesAtual,(	((bemDepreciar.getValor_aquisicao().doubleValue() -((valorDepreciacaoMes * meses) + (bemDepreciar.getValor_aquisicao().doubleValue() -(valorDepreciacaoMes * meses) ))))));
+		   /*acima só para teste, na verdade registrar zero no valor*/
+		   break;
+	   }else {
+		   
+		  	 RegistraDepreciacao(bemDepreciar.getId(),anoAtual,mesAtual,(bemDepreciar.getValor_aquisicao().doubleValue() -(valorDepreciacaoMes * meses) ));
+
+	   }
     	 
 	    	 if(mesAtual==12) {
 	    		 anoAtual++;
