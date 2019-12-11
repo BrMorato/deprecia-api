@@ -71,6 +71,24 @@ if(dateDiff>0) {
             return monthsBetween;
      }
 	
+	public void LimpaDepreciacao(int idBem) {
+		try {
+			String sql = "delete from tab_depreciacao where id_bem = ?";
+			Connection conn = this.datasource.getConnection();
+			PreparedStatement pstm = conn.prepareStatement(sql);
+						
+			pstm.setInt(1, idBem);
+				
+			pstm.executeUpdate();
+
+
+			conn.close();
+		}catch (Exception e) {
+			System.out.print("Erro ao limpar depreciação para recalcular" + e.getMessage());
+		}
+		
+	}
+	
 	public void RegistraDepreciacao(int idBem,int ano,int mes,Double valor) throws SQLException {
 		try {
 			String sql = "insert into tab_depreciacao (id_bem,mes,ano,valor) values (?,?,?,?)";
@@ -212,7 +230,7 @@ if(dateDiff>0) {
 	    mesAtual = mesInicio;
 	    meses =1;
 	   
-	    
+	    LimpaDepreciacao(bemDepreciar.getId());
 	     
    while (( anoAtual<=anoFinal)) {
 	    // while ((mesAtual<=12) & ((anoAtual <= dataVenda.getYear()) & (mesAtual<=mesFinal))) {

@@ -24,6 +24,7 @@ public class Bem {
 	private Date dt_aquisicao;
 	private Date dt_venda;
 	private boolean status;
+	private int tempo_uso;
 	private Crfb classificacao;
 	
 	
@@ -102,6 +103,13 @@ public class Bem {
 	public void setValor_residual(BigDecimal valor_residual) {
 		this.valor_residual = valor_residual;
 	}
+	public int getTempo_uso() {
+		return tempo_uso;
+	}
+	public void setTempo_uso(int tempo_uso) {
+		this.tempo_uso = tempo_uso;
+	}
+	
 	
 	
 
